@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Controller.PlayerController;
+using UnityEngine;
 using UnityEngine.UI; // UI 관련 코드
 
 // 플레이어 캐릭터의 생명체로서의 동작을 담당

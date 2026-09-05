@@ -1,3 +1,4 @@
+using Interface;
 using UnityEngine;
 
 // 게임 점수를 증가시키는 아이템
