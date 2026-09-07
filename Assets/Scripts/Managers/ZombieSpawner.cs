@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Entity;
+using Managers;
 using UnityEngine;
 
 // 좀비 게임 오브젝트를 주기적으로 생성
@@ -13,7 +15,7 @@ public class ZombieSpawner : MonoBehaviour {
 
     private void Update() {
         // 게임 오버 상태일때는 생성하지 않음
-        if (GameManager.instance != null && GameManager.instance.isGameover)
+        if (GameManager.Instance && GameManager.Instance.isGameover)
         {
             return;
         }

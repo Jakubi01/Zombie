@@ -1,4 +1,5 @@
-﻿using Interface;
+﻿using Entity;
+using Interface;
 using UnityEngine;
 
 // 체력을 회복하는 아이템

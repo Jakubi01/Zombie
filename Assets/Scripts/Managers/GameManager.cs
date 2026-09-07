@@ -4,6 +4,8 @@ namespace Managers
 {
     public class GameManager : MonoBehaviour
     {
+        public bool isGameover;
+
         [Header("Static Instance")]
         public static GameManager Instance => _instance;
         private static GameManager _instance;
@@ -20,6 +22,11 @@ namespace Managers
             }
             
             DontDestroyOnLoad(gameObject);
+        }
+
+        public void AddScore(int score)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
