@@ -4,19 +4,20 @@ namespace Managers
 {
     public class GameManager : MonoBehaviour
     {
-        public bool isGameover;
-
         [Header("Static Instance")]
-        public static GameManager Instance => _instance;
-        private static GameManager _instance;
+        public static GameManager Instance { get; private set; }
+
+        [Header("Game role")]
+        private int _score = 0;
+        public bool IsGameOver { get; private set; }
 
         private void Awake()
         {
-            if (!_instance)
+            if (!Instance)
             {
-                _instance = this;
+                Instance = this;
             }
-            else if (_instance != this)
+            else if (Instance != this)
             {
                 Destroy(gameObject);
             }
@@ -24,9 +25,18 @@ namespace Managers
             DontDestroyOnLoad(gameObject);
         }
 
-        public void AddScore(int score)
+        public void AddScore(int newScore)
         {
-            throw new System.NotImplementedException();
+            if (IsGameOver) return;
+            
+            _score += newScore;
+            UIManager.Instance.UpdateScoreText(_score);
+        }
+        
+        public void EndGame()
+        {
+            IsGameOver = true;
+            UIManager.Instance.SetActiveGameOverUI(true);
         }
     }
 }

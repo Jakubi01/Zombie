@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Animation;
 using UnityEngine;
 using UnityEngine.AI;
@@ -12,28 +13,29 @@ namespace Entity
     {
         public LayerMask whatIsTarget; // 추적 대상 레이어
 
-        private LivingEntity targetEntity; // 추적 대상
-        private NavMeshAgent navMeshAgent; // 경로 계산 AI 에이전트
+        private LivingEntity _targetEntity; // 추적 대상
+        private NavMeshAgent _navMeshAgent; // 경로 계산 AI 에이전트
 
         public ParticleSystem hitEffect; // 피격 시 재생할 파티클 효과
         public AudioClip deathSound; // 사망 시 재생할 소리
         public AudioClip hitSound; // 피격 시 재생할 소리
 
-        private Animator zombieAnimator; // 애니메이터 컴포넌트
-        private AudioSource zombieAudioPlayer; // 오디오 소스 컴포넌트
-        private Renderer zombieRenderer; // 렌더러 컴포넌트
+        private Animator _zombieAnimator; // 애니메이터 컴포넌트
+        private AudioSource _zombieAudioPlayer; // 오디오 소스 컴포넌트
+        private Renderer _zombieRenderer; // 렌더러 컴포넌트
 
         public float damage = 20f; // 공격력
         public float timeBetAttack = 0.5f; // 공격 간격
-        private float lastAttackTime; // 마지막 공격 시점
+        private float _lastAttackTime; // 마지막 공격 시점
+        private const float TurnSpeed = 10f;
 
         // 추적할 대상이 존재하는지 알려주는 프로퍼티
-        private bool hasTarget
+        private bool HasTarget
         {
             get
             {
                 // 추적할 대상이 존재하고, 대상이 사망하지 않았다면 true
-                if (targetEntity != null && !targetEntity.Dead)
+                if (_targetEntity != null && !_targetEntity.Dead)
                 {
                     return true;
                 }
@@ -46,10 +48,10 @@ namespace Entity
         private void Awake()
         {
             // 초기화
-            navMeshAgent = GetComponent<NavMeshAgent>();
-            zombieAnimator = GetComponent<Animator>();
-            zombieAudioPlayer = GetComponent<AudioSource>();
-            zombieRenderer = zombieAnimator.GetComponent<Renderer>();
+            _navMeshAgent = GetComponent<NavMeshAgent>();
+            _zombieAnimator = GetComponent<Animator>();
+            _zombieAudioPlayer = GetComponent<AudioSource>();
+            _zombieRenderer = GetComponentInChildren<Renderer>();
         }
 
         // 좀비 AI의 초기 스펙을 결정하는 셋업 메서드
@@ -58,8 +60,9 @@ namespace Entity
             startingHealth = zombieData.health;
             Health = zombieData.damage;
             damage = zombieData.damage;
-            navMeshAgent.speed = zombieData.speed;
-            zombieRenderer.material.color = zombieData.skinColor;
+            _navMeshAgent.speed = zombieData.speed;
+            _navMeshAgent.stoppingDistance = 1f; 
+            _zombieRenderer.material.color = zombieData.skinColor;
         }
 
         private void Start()
@@ -71,7 +74,18 @@ namespace Entity
         private void Update()
         {
             // 추적 대상의 존재 여부에 따라 다른 애니메이션 재생
-            zombieAnimator.SetBool(AnimationHashToParam.HasTarget, hasTarget);
+            _zombieAnimator.SetBool(AnimationHashToParam.HasTarget, HasTarget);
+
+            if (!HasTarget) return;
+            if (!HasTarget || !_targetEntity) return;
+                
+            Vector3 direction = _targetEntity.transform.position - transform.position;
+            direction.y = 0f;
+
+            if (direction == Vector3.zero) return;
+                
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, TurnSpeed * Time.deltaTime);
         }
 
         // 주기적으로 추적할 대상의 위치를 찾아 경로 갱신
@@ -80,16 +94,16 @@ namespace Entity
             // 살아 있는 동안 무한 루프
             while (!Dead)
             {
-                if (hasTarget)
+                if (HasTarget)
                 {
-                    navMeshAgent.isStopped = false;
-                    navMeshAgent.SetDestination(targetEntity.transform.position);
+                    _navMeshAgent.isStopped = false;
+                    _navMeshAgent.SetDestination(_targetEntity.transform.position);
                 }
                 else
                 {
-                    navMeshAgent.isStopped = true;
+                    _navMeshAgent.isStopped = true;
 
-                    var results = new Collider[] { };
+                    var results = new Collider[1];
                     var size = Physics.OverlapSphereNonAlloc(transform.position, 20f, results, whatIsTarget);
                     if (size > 0)
                     {
@@ -98,7 +112,7 @@ namespace Entity
                             var livingEntity = result.GetComponent<LivingEntity>();
                             if (!livingEntity || livingEntity.Dead) continue;
                             
-                            targetEntity = livingEntity;
+                            _targetEntity = livingEntity;
                             break;
                         }
                     }
@@ -118,7 +132,7 @@ namespace Entity
                 hitEffect.transform.rotation = Quaternion.LookRotation(hitNormal);
                 hitEffect.Play();
                 
-                zombieAudioPlayer.PlayOneShot(hitSound);
+                _zombieAudioPlayer.PlayOneShot(hitSound);
             }
             
             base.OnDamage(damage, hitPoint, hitNormal);
@@ -136,28 +150,33 @@ namespace Entity
                 zombieCollider.enabled = false;
             }
             
-            navMeshAgent.isStopped = true;
-            navMeshAgent.enabled = false;
+            _navMeshAgent.isStopped = true;
+            _navMeshAgent.enabled = false;
             
-            zombieAnimator.SetTrigger(AnimationHashToParam.Dead);
-            zombieAudioPlayer.PlayOneShot(deathSound);
+            _zombieAnimator.SetTrigger(AnimationHashToParam.Die);
+            _zombieAudioPlayer.PlayOneShot(deathSound);
         }
 
         private void OnTriggerStay(Collider other)
         {
             // 트리거 충돌한 상대방 게임 오브젝트가 추적 대상이라면 공격 실행
-            if (!Dead && Time.time >= lastAttackTime + timeBetAttack)
+            if (!Dead && Time.time >= _lastAttackTime + timeBetAttack)
             {
-                LivingEntity attackTarget = other.GetComponent<LivingEntity>();
-                if (attackTarget && attackTarget == targetEntity)
-                {
-                    lastAttackTime = Time.time;
-                    Vector3 hitPoint = other.ClosestPoint(transform.position);
-                    Vector3 hitNormal = hitPoint - other.transform.position;
+                var attackTarget = other.GetComponent<LivingEntity>();
+                if (!attackTarget || attackTarget != _targetEntity) return;
+                
+                _lastAttackTime = Time.time;
+                var hitPoint = other.ClosestPoint(transform.position);
+                var hitNormal = hitPoint - other.transform.position;
                     
-                    attackTarget.OnDamage(damage, hitPoint, hitNormal);
-                }
+                attackTarget.OnDamage(damage, hitPoint, hitNormal);
             }
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, 20f);
         }
     }
 }

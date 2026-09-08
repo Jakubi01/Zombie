@@ -1,5 +1,6 @@
 ﻿using Animation;
 using Item.Weapon;
+using Managers;
 using UnityEngine;
 
 // 주어진 Gun 오브젝트를 쏘거나 재장전
@@ -32,6 +33,8 @@ namespace Controller.PlayerController
 
         public void Fire()
         {
+            if (!gun.enabled) return;
+            
             gun.Fire();
             UpdateUI();
         }
@@ -45,10 +48,10 @@ namespace Controller.PlayerController
 
         private void UpdateUI()
         {
-            if (gun != null && UIManager.instance != null)
+            if (gun != null && UIManager.Instance != null)
             { 
                 // UI 매니저의 탄약 텍스트에 탄창의 탄약과 남은 전체 탄약을 표시
-                UIManager.instance.UpdateAmmoText(gun.magAmmo, gun.ammoRemain);
+                UIManager.Instance.UpdateAmmoText(gun.magAmmo, gun.ammoRemain);
             }
         }
 

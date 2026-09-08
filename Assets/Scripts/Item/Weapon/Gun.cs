@@ -56,7 +56,7 @@ namespace Item.Weapon
         // 발사 시도
         public void Fire()
         {
-            if (state == State.Ready && Time.time >= lastFireTime + gunData.timeBetFire)
+            if (gameObject.activeInHierarchy && state == State.Ready && Time.time >= lastFireTime + gunData.timeBetFire)
             {
                 lastFireTime = Time.time;
                 Shot();
@@ -116,7 +116,7 @@ namespace Item.Weapon
         // 재장전 시도
         public bool Reload()
         {
-            if (state == State.Reloading || ammoRemain <= 0 || magAmmo >= gunData.magCapacity)
+            if (!gameObject.activeInHierarchy && state == State.Reloading || ammoRemain <= 0 || magAmmo >= gunData.magCapacity)
             {
                 return false;
             }

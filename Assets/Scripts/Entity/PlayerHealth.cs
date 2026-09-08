@@ -1,6 +1,7 @@
 ﻿using Animation;
 using Controller.PlayerController;
 using Interface;
+using Managers;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -44,6 +45,14 @@ namespace Entity
             _playerShooter.enabled = true;
         }
 
+        private void Start()
+        {
+            if (GameManager.Instance)
+            {
+                OnDeath += GameManager.Instance.EndGame;
+            }
+        }
+
         // 체력 회복
         public override void RestoreHealth(float newHealth)
         {
@@ -72,7 +81,7 @@ namespace Entity
             healthSlider.gameObject.SetActive(false);
             
             _playerAudioPlayer.PlayOneShot(deathClip);
-            _playerAnimator.SetTrigger(AnimationHashToParam.Dead);
+            _playerAnimator.SetTrigger(AnimationHashToParam.Die);
             
             _playerController.enabled = false;
             _playerShooter.enabled = false;
@@ -80,15 +89,13 @@ namespace Entity
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!Dead)
-            {
-                IItem item = other.GetComponent<IItem>();
-                if (item != null)
-                {
-                    item.Use(gameObject);
-                    _playerAudioPlayer.PlayOneShot(itemPickupClip);
-                }
-            }
+            if (Dead) return;
+            
+            IItem item = other.GetComponent<IItem>();
+            if (item == null) return;
+            
+            item.Use(gameObject);
+            _playerAudioPlayer.PlayOneShot(itemPickupClip);
         }
     }
 }
