@@ -75,9 +75,8 @@ namespace Entity
         {
             // 추적 대상의 존재 여부에 따라 다른 애니메이션 재생
             _zombieAnimator.SetBool(AnimationHashToParam.HasTarget, HasTarget);
-
-            if (!HasTarget) return;
-            if (!HasTarget || !_targetEntity) return;
+            
+            if (!HasTarget || !_targetEntity || Dead) return;
                 
             Vector3 direction = _targetEntity.transform.position - transform.position;
             direction.y = 0f;

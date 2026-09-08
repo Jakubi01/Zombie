@@ -20,16 +20,24 @@ namespace Controller.PlayerController
 
         public void OnMove(InputAction.CallbackContext context)
         {
+            if (!enabled)
+            {
+                Input = Vector2.zero;
+                return;
+            }
+            
             Input = context.ReadValue<Vector2>();
         }
 
         public void OnSprint(InputAction.CallbackContext context)
         {
-            
+            if (!enabled) return;
         }
 
         public void OnAttack(InputAction.CallbackContext context)
         {
+            if (!enabled) return;
+            
             if (_playerShooter)
             {
                 _playerShooter.Fire();
@@ -38,6 +46,8 @@ namespace Controller.PlayerController
 
         public void OnReload(InputAction.CallbackContext context)
         {
+            if (!enabled) return;
+            
             if (_playerShooter)
             {
                 _playerShooter.Reload();
@@ -46,7 +56,7 @@ namespace Controller.PlayerController
 
         public void OnInteract(InputAction.CallbackContext context)
         {
-            
+            if (!enabled) return;
         }
     }
 }

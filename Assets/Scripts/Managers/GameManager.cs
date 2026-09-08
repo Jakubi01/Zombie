@@ -9,7 +9,7 @@ namespace Managers
 
         [Header("Game role")]
         private int _score = 0;
-        public bool IsGameOver { get; private set; }
+        public bool IsGameOver { get; set; }
 
         private void Awake()
         {

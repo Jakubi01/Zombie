@@ -1,6 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Interface;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 // 총을 구현
@@ -17,6 +17,7 @@ namespace Item.Weapon
         }
 
         public State state { get; private set; } // 현재 총의 상태
+        public event Action OnReloadComplete;
 
         public Transform fireTransform; // 탄알이 발사될 위치
 
@@ -116,7 +117,7 @@ namespace Item.Weapon
         // 재장전 시도
         public bool Reload()
         {
-            if (!gameObject.activeInHierarchy && state == State.Reloading || ammoRemain <= 0 || magAmmo >= gunData.magCapacity)
+            if (!gameObject.activeInHierarchy || !enabled || state == State.Reloading || ammoRemain <= 0 || magAmmo >= gunData.magCapacity)
             {
                 return false;
             }
@@ -146,6 +147,8 @@ namespace Item.Weapon
 
             // 총의 현재 상태를 발사 준비된 상태로 변경
             state = State.Ready;
+            
+            OnReloadComplete?.Invoke();
         }
     }
 }

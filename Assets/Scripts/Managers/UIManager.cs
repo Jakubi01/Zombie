@@ -55,6 +55,7 @@ namespace Managers
         public void GameRestart()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            GameManager.Instance.IsGameOver = false;
         }
     }
 }

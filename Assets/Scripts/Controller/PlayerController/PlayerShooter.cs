@@ -22,13 +22,19 @@ namespace Controller.PlayerController
         }
 
         private void OnEnable()
-        { 
+        {
+            if (!gun) return;
+            
             gun.gameObject.SetActive(true);
+            gun.OnReloadComplete += UpdateUI;
         }
 
         private void OnDisable()
         {
+            if (!gun) return;
+            
             gun.gameObject.SetActive(false);
+            gun.OnReloadComplete -= UpdateUI;
         }
 
         public void Fire()
@@ -41,16 +47,16 @@ namespace Controller.PlayerController
 
         public void Reload()
         {
-            gun.Reload();
-            _playerAnimator.SetTrigger(AnimationHashToParam.Reload);
-            UpdateUI();
+            if (gun != null && gun.Reload())
+            {
+                _playerAnimator.SetTrigger(AnimationHashToParam.Reload);
+            }
         }
 
         private void UpdateUI()
         {
             if (gun != null && UIManager.Instance != null)
             { 
-                // UI 매니저의 탄약 텍스트에 탄창의 탄약과 남은 전체 탄약을 표시
                 UIManager.Instance.UpdateAmmoText(gun.magAmmo, gun.ammoRemain);
             }
         }

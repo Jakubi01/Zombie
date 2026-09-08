@@ -1,5 +1,6 @@
 ﻿using Controller.PlayerController;
 using Interface;
+using Managers;
 using UnityEngine;
 
 // 총알을 충전하는 아이템
@@ -17,6 +18,7 @@ public class AmmoPack : MonoBehaviour, IItem
         {
             // 총의 남은 탄환 수를 ammo 만큼 더한다
             playerShooter.gun.ammoRemain += ammo;
+            UIManager.Instance.UpdateAmmoText(playerShooter.gun.magAmmo, playerShooter.gun.ammoRemain);
         }
 
         // 사용되었으므로, 자신을 파괴
