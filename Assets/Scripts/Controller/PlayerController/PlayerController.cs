@@ -32,6 +32,15 @@ namespace Controller.PlayerController
         public void OnSprint(InputAction.CallbackContext context)
         {
             if (!enabled) return;
+
+            if (context.started)
+            {
+                _playerCharacter.SpeedMultiplier = 1.2f;
+            }
+            else if (context.canceled)
+            {
+                _playerCharacter.SpeedMultiplier = 1f;
+            }
         }
 
         public void OnAttack(InputAction.CallbackContext context)

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -25,7 +25,7 @@ namespace Managers
         public Text ammoText; // 탄약 표시용 텍스트
         public Text scoreText; // 점수 표시용 텍스트
         public Text waveText; // 적 웨이브 표시용 텍스트
-        public GameObject gameOverUI; // 게임 오버시 활성화할 UI 
+        public GameObject gameOverUI; // 게임 오버시 활성화할 UI
 
         // 탄약 텍스트 갱신
         public void UpdateAmmoText(int magAmmo, int remainAmmo)
@@ -54,8 +54,7 @@ namespace Managers
         // 게임 재시작
         public void GameRestart()
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            GameManager.Instance.IsGameOver = false;
+            GameManager.Instance?.RestartGame();
         }
     }
 }

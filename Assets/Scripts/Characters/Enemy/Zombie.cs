@@ -1,13 +1,11 @@
-﻿using System;
 using System.Collections;
 using Animation;
+using Entity;
 using UnityEngine;
 using UnityEngine.AI;
 
-// AI, 내비게이션 시스템 관련 코드 가져오기
 
-// 좀비 AI 구현
-namespace Entity
+namespace Characters.Enemy
 {
     public class Zombie : LivingEntity
     {
@@ -28,26 +26,12 @@ namespace Entity
         public float timeBetAttack = 0.5f; // 공격 간격
         private float _lastAttackTime; // 마지막 공격 시점
         private const float TurnSpeed = 10f;
-
-        // 추적할 대상이 존재하는지 알려주는 프로퍼티
-        private bool HasTarget
-        {
-            get
-            {
-                // 추적할 대상이 존재하고, 대상이 사망하지 않았다면 true
-                if (_targetEntity != null && !_targetEntity.Dead)
-                {
-                    return true;
-                }
-
-                // 그렇지 않다면 false
-                return false;
-            }
-        }
-
+        
+        // 추적할 대상이 존재하고, 대상이 사망하지 않았다면 true
+        private bool HasTarget => _targetEntity && !_targetEntity.Dead;
+        
         private void Awake()
         {
-            // 초기화
             _navMeshAgent = GetComponent<NavMeshAgent>();
             _zombieAnimator = GetComponent<Animator>();
             _zombieAudioPlayer = GetComponent<AudioSource>();
@@ -58,10 +42,10 @@ namespace Entity
         public void Setup(ZombieData zombieData)
         {
             startingHealth = zombieData.health;
-            Health = zombieData.damage;
+            Health = startingHealth;
             damage = zombieData.damage;
             _navMeshAgent.speed = zombieData.speed;
-            _navMeshAgent.stoppingDistance = 1f; 
+            _navMeshAgent.stoppingDistance = 1f;
             _zombieRenderer.material.color = zombieData.skinColor;
         }
 
