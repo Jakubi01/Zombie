@@ -213,6 +213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0ee2c38a92e4d9d8ecadcbc777cf18b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  killstreakActivationScore: 1000
 --- !u!4 &230032694
 Transform:
   m_ObjectHideFlags: 0
@@ -672,18 +673,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 395466788616699887, guid: 0404fdf928c75484e911574042fb35f9, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 395466788616699887, guid: 0404fdf928c75484e911574042fb35f9, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1524347256332847973, guid: 0404fdf928c75484e911574042fb35f9, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2148141870000858731, guid: 0404fdf928c75484e911574042fb35f9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -733,18 +722,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5079252632546868311, guid: 0404fdf928c75484e911574042fb35f9, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5830761695149932685, guid: 0404fdf928c75484e911574042fb35f9, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5830761695149932685, guid: 0404fdf928c75484e911574042fb35f9, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9091715171479276589, guid: 0404fdf928c75484e911574042fb35f9, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}

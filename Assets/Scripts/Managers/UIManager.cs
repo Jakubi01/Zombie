@@ -51,10 +51,19 @@ namespace Managers
             gameOverUI.SetActive(active);
         }
 
-        // 게임 재시작
+        // 게임 재시작 
         public void GameRestart()
         {
             GameManager.Instance?.RestartGame();
+        }
+
+        public void GameQuit()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
         }
     }
 }

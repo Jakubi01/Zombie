@@ -29,17 +29,13 @@ namespace Controller.PlayerController
             Input = context.ReadValue<Vector2>();
         }
 
-        public void OnSprint(InputAction.CallbackContext context)
+        public void OnDash(InputAction.CallbackContext context)
         {
             if (!enabled) return;
 
             if (context.started)
             {
-                _playerCharacter.SpeedMultiplier = 1.2f;
-            }
-            else if (context.canceled)
-            {
-                _playerCharacter.SpeedMultiplier = 1f;
+                _playerCharacter.Dash();
             }
         }
 

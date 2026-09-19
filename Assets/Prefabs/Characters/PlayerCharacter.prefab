@@ -601,6 +601,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03364f345dd54ffd94262dfd403a166f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dashSpeed: 200
+  dashTime: 0.5
+  dashCooldown: 3
 --- !u!114 &9007607725848658774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -678,7 +681,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6431701441375417520}
         m_TargetAssemblyTypeName: Controller.PlayerController.PlayerController, Assembly-CSharp
-        m_MethodName: OnSprint
+        m_MethodName: OnDash
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

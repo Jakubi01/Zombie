@@ -1,3 +1,4 @@
+using System.Collections;
 using Animation;
 using Controller.PlayerController;
 using UnityEngine;
@@ -21,7 +22,14 @@ namespace Characters.Player
         private const float Speed = 5f;
         private Vector3 _moveDirection;
         private const float TurnSpeed = 10f;
-        public float SpeedMultiplier = 1f;
+        
+        [Header("Dash Settings")]
+        [SerializeField] private float dashForce = 20f;
+
+        [SerializeField] private float dashDuration = 0.2f;
+        [SerializeField] private float dashCooldown = 1f; 
+        private bool _canDash = true;
+        private bool _isDashing = false;
 
         private protected void Awake()
         {
@@ -30,6 +38,8 @@ namespace Characters.Player
             _rigidbody = GetComponent<Rigidbody>();
             _rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
             _rigidbody.angularDamping = 20f;
+            _rigidbody.mass = 1f;
+            _rigidbody.linearDamping = 1f;
 
             _capsuleCollider = GetComponent<CapsuleCollider>();
             _capsuleCollider.center = new Vector3(0f, 0.75f, 0f);
@@ -46,7 +56,9 @@ namespace Characters.Player
 
         private void FixedUpdate()
         {
-            ProcessTranslate();
+            if(!_isDashing)
+                ProcessTranslate();
+            
             ProcessRotate();
         }
 
@@ -67,9 +79,9 @@ namespace Characters.Player
 
             _animator.SetFloat(AnimationHashToParam.Move, _moveDirection.magnitude);
             _rigidbody.linearVelocity = new Vector3(
-                _moveDirection.x * (Speed * SpeedMultiplier),
+                _moveDirection.x * Speed, 
                 currentVelocity.y,
-                _moveDirection.z * (Speed * SpeedMultiplier));
+                _moveDirection.z * Speed);
         }
 
         private void ProcessRotate()
@@ -87,6 +99,37 @@ namespace Characters.Player
 
             var targetRotation = Quaternion.LookRotation(lookDirection);
             _rigidbody.MoveRotation(Quaternion.Slerp(_rigidbody.rotation, targetRotation, TurnSpeed * Time.fixedDeltaTime));
+        }
+
+        public void Dash()
+        {
+            if (!_canDash || _isDashing) return;
+
+            var dashDirection = _moveDirection;
+            
+            if (dashDirection.sqrMagnitude <= 0.0001f)
+            {
+                dashDirection = transform.forward;
+            }
+
+            StartCoroutine(DashRoutine(dashDirection));
+        }
+        
+        private IEnumerator DashRoutine(Vector3 direction)
+        {
+            _canDash = false;
+            _isDashing = true;
+
+            _rigidbody.linearVelocity = Vector3.zero;
+            
+            _rigidbody.AddForce(direction.normalized * dashForce, ForceMode.VelocityChange);
+
+            yield return new WaitForSeconds(dashDuration);
+            
+            _isDashing = false;
+
+            yield return new WaitForSeconds(dashCooldown);
+            _canDash = true;
         }
     }
 }
