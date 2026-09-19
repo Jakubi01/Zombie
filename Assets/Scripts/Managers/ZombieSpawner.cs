@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using Characters.Enemy;
 using Entity;
 using UnityEngine;
@@ -15,7 +16,15 @@ namespace Managers
 
         private readonly List<Zombie> _zombies = new(); // 생성된 좀비들을 담는 리스트
         private int _wave; // 현재 웨이브
+        private bool _isWaitingForNextWave = false;
+        public float waveDelay = 20f;
+        private float _currentRestTime = 0f;
 
+        private void Start()
+        {
+            SpawnWave();
+        }
+        
         private void Update()
         {
             // 게임 오버 상태일때는 생성하지 않음
@@ -25,11 +34,14 @@ namespace Managers
             }
 
             // 좀비를 모두 물리친 경우 다음 스폰 실행
-            if (_zombies.Count <= 0)
+            if (_zombies.Count <= 0 && !_isWaitingForNextWave)
             {
-                SpawnWave();
+                GameManager.Instance.IsStandBy = true;
+                StartCoroutine(nameof(StandbyRoutine));
             }
 
+            if (!UIManager.Instance) return;
+            
             // UI 갱신
             UpdateUI();
         }
@@ -39,6 +51,27 @@ namespace Managers
         {
             // 현재 웨이브와 남은 적 수 표시
             UIManager.Instance.UpdateWaveText(_wave, _zombies.Count);
+        }
+
+        private IEnumerator StandbyRoutine()
+        {
+            _isWaitingForNextWave = true;
+            _currentRestTime = waveDelay;
+
+            while (_currentRestTime > 0f)
+            {
+                UIManager.Instance.UpdateRestTimeText(_currentRestTime);
+
+                _currentRestTime -= Time.deltaTime;
+                Debug.Log(_currentRestTime);
+                yield return null;
+            }
+
+            _currentRestTime = 0f;
+            SpawnWave();
+
+            _isWaitingForNextWave = false;
+            GameManager.Instance.IsStandBy = false;
         }
 
         // 현재 웨이브에 맞춰 좀비들을 생성

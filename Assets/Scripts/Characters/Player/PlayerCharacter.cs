@@ -25,7 +25,6 @@ namespace Characters.Player
         
         [Header("Dash Settings")]
         [SerializeField] private float dashForce = 20f;
-
         [SerializeField] private float dashDuration = 0.2f;
         [SerializeField] private float dashCooldown = 1f; 
         private bool _canDash = true;

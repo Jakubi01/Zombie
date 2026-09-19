@@ -16,6 +16,7 @@ namespace Managers
         public int Score => _score;
         public bool IsGameOver { get; set; }
         public bool IsKillstreakActive { get; private set; }
+        public bool IsStandBy { get; set; }
         public event Action OnKillstreakActivated;
 
         private void Awake()

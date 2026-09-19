@@ -65,5 +65,10 @@ namespace Managers
             Application.Quit();
 #endif
         }
+
+        public void UpdateRestTimeText(float currentRestTime)
+        {
+            
+        }
     }
 }

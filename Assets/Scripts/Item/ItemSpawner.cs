@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Managers;
+using UnityEngine;
 using UnityEngine.AI;
 
 // 주기적으로 아이템을 플레이어 근처에 생성하는 스크립트
@@ -27,6 +28,8 @@ namespace Item
         // 주기적으로 아이템 생성 처리 실행
         private void Update()
         {
+            if (!GameManager.Instance || GameManager.Instance.IsStandBy) return;
+            
             // 현재 시점이 마지막 생성 시점에서 생성 주기 이상 지남
             // && 플레이어 캐릭터가 존재함
             if (Time.time >= lastSpawnTime + timeBetSpawn && playerTransform != null)
