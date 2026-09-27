@@ -1,4 +1,5 @@
 ﻿using Characters.Player;
+using Managers;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -20,7 +21,7 @@ namespace Controller.PlayerController
 
         public void OnMove(InputAction.CallbackContext context)
         {
-            if (!enabled)
+            if (!enabled || GameManager.Instance.IsStandBy)
             {
                 Input = Vector2.zero;
                 return;
@@ -31,7 +32,7 @@ namespace Controller.PlayerController
 
         public void OnDash(InputAction.CallbackContext context)
         {
-            if (!enabled) return;
+            if (!enabled || GameManager.Instance.IsStandBy) return;
 
             if (context.started)
             {
@@ -41,7 +42,7 @@ namespace Controller.PlayerController
 
         public void OnAttack(InputAction.CallbackContext context)
         {
-            if (!enabled) return;
+            if (!enabled || GameManager.Instance.IsStandBy) return;
             
             if (_playerShooter)
             {
@@ -57,11 +58,6 @@ namespace Controller.PlayerController
             {
                 _playerShooter.Reload();
             }
-        }
-
-        public void OnInteract(InputAction.CallbackContext context)
-        {
-            if (!enabled) return;
         }
     }
 }

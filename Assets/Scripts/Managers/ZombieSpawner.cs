@@ -17,7 +17,7 @@ namespace Managers
         private readonly List<Zombie> _zombies = new(); // 생성된 좀비들을 담는 리스트
         private int _wave; // 현재 웨이브
         private bool _isWaitingForNextWave = false;
-        public float waveDelay = 20f;
+        private const float WaveDelay = 10f;
         private float _currentRestTime = 0f;
 
         private void Start()
@@ -56,17 +56,23 @@ namespace Managers
         private IEnumerator StandbyRoutine()
         {
             _isWaitingForNextWave = true;
-            _currentRestTime = waveDelay;
+            _currentRestTime = WaveDelay;
+            
+            UIManager.Instance.ToggleStandByText(true);
+            UIManager.Instance.ToggleShop(true);
 
             while (_currentRestTime > 0f)
             {
-                UIManager.Instance.UpdateRestTimeText(_currentRestTime);
+                UIManager.Instance.UpdateStandByText(_currentRestTime);
 
                 _currentRestTime -= Time.deltaTime;
                 Debug.Log(_currentRestTime);
                 yield return null;
             }
 
+            UIManager.Instance.ToggleStandByText(false);
+            UIManager.Instance.ToggleShop(false);
+            
             _currentRestTime = 0f;
             SpawnWave();
 

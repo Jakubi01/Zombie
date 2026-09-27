@@ -616,6 +616,18 @@ MonoBehaviour:
   - {fileID: 2011673515}
   - {fileID: 2011673514}
   - {fileID: 2011673513}
+  waveDelay: 20
+--- !u!114 &1435431811 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8148899951206892994, guid: 63226789a2ac34fec8493b064c47bd44, type: 3}
+  m_PrefabInstance: {fileID: 2072668515}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00b188304819469696ba6e735875553f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1452341648
 GameObject:
   m_ObjectHideFlags: 0
@@ -979,9 +991,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114467243759996372, guid: 63226789a2ac34fec8493b064c47bd44, type: 3}
+      propertyPath: shopUI
+      value: 
+      objectReference: {fileID: 1435431811}
+    - target: {fileID: 114467243759996372, guid: 63226789a2ac34fec8493b064c47bd44, type: 3}
       propertyPath: gameOverUI
       value: 
       objectReference: {fileID: 1180979894}
+    - target: {fileID: 223786746103758746, guid: 63226789a2ac34fec8493b064c47bd44, type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 224345049331407482, guid: 63226789a2ac34fec8493b064c47bd44, type: 3}
       propertyPath: m_Pivot.x
       value: 0

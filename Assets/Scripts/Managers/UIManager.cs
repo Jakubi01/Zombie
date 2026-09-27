@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Managers
@@ -25,8 +24,16 @@ namespace Managers
         public Text ammoText; // 탄약 표시용 텍스트
         public Text scoreText; // 점수 표시용 텍스트
         public Text waveText; // 적 웨이브 표시용 텍스트
+        public Text standByText; // 웨이브 쉬는 시간
+        public ShopManager shopUI;
         public GameObject gameOverUI; // 게임 오버시 활성화할 UI
 
+        private void Awake()
+        {
+            standByText.gameObject.SetActive(false);
+            shopUI.gameObject.SetActive(false);
+        }
+        
         // 탄약 텍스트 갱신
         public void UpdateAmmoText(int magAmmo, int remainAmmo)
         {
@@ -45,10 +52,28 @@ namespace Managers
             waveText.text = "Wave : " + waves + "\nEnemy Left : " + count;
         }
 
+        public void ToggleStandByText(bool active)
+        {
+            if (standByText)
+            {
+                standByText.gameObject.SetActive(active);
+            }
+        }
+        
+        public void UpdateStandByText(float value)
+        {
+            standByText.text = "StandBy : " + value.ToString("F2");
+        }
+
         // 게임 오버 UI 활성화
         public void SetActiveGameOverUI(bool active)
         {
             gameOverUI.SetActive(active);
+        }
+
+        public void ToggleShop(bool active)
+        {
+            shopUI.gameObject.SetActive(active);
         }
 
         // 게임 재시작 
@@ -64,11 +89,6 @@ namespace Managers
 #else
             Application.Quit();
 #endif
-        }
-
-        public void UpdateRestTimeText(float currentRestTime)
-        {
-            
         }
     }
 }

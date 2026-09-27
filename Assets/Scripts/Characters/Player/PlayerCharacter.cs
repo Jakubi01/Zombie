@@ -20,6 +20,7 @@ namespace Characters.Player
         private Camera _mainCamera;
 
         private const float Speed = 5f;
+        private float _speedMultiplier = 1f;
         private Vector3 _moveDirection;
         private const float TurnSpeed = 10f;
         
@@ -78,9 +79,9 @@ namespace Characters.Player
 
             _animator.SetFloat(AnimationHashToParam.Move, _moveDirection.magnitude);
             _rigidbody.linearVelocity = new Vector3(
-                _moveDirection.x * Speed, 
+                _moveDirection.x * (Speed * _speedMultiplier), 
                 currentVelocity.y,
-                _moveDirection.z * Speed);
+                _moveDirection.z * (Speed * _speedMultiplier));
         }
 
         private void ProcessRotate()
@@ -129,6 +130,13 @@ namespace Characters.Player
 
             yield return new WaitForSeconds(dashCooldown);
             _canDash = true;
+        }
+
+        public void IncreaseMoveSpeed(float value)
+        {
+            if (value <= 0f) return;
+            
+            _speedMultiplier *= value;
         }
     }
 }
