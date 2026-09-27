@@ -13,7 +13,8 @@ namespace Managers
 
         [Header("Game role")]
         private int _score;
-        [SerializeField, Min(1)] private int killstreakActivationScore = 1000;
+
+        private const int KillstreakActivationScore = 1000;
 
         public int Score => _score;
         public bool IsGameOver { get; set; }
@@ -66,7 +67,7 @@ namespace Managers
             _score += newScore;
             UIManager.Instance?.UpdateScoreText(_score);
 
-            if (!IsKillstreakActive && _score >= killstreakActivationScore)
+            if (!IsKillstreakActive && _score >= KillstreakActivationScore)
             {
                 IsKillstreakActive = true;
                 OnKillstreakActivated?.Invoke();
