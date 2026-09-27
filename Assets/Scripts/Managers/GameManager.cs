@@ -1,4 +1,6 @@
 using System;
+using Characters.Enemy;
+using Interface;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -38,6 +40,14 @@ namespace Managers
         private void Start()
         {
             SyncUI();
+
+            var ms = FindFirstObjectByType<MissileSpawner>();
+            if (ms)
+            {
+                OnKillstreakActivated += ms.SpawnMissile;
+            }
+
+            OnKillstreakActivated += UIManager.Instance.KillStreak;
         }
 
         private void OnDestroy()
@@ -95,6 +105,19 @@ namespace Managers
 
             UIManager.Instance.UpdateScoreText(_score);
             UIManager.Instance.SetActiveGameOverUI(IsGameOver);
+        }
+
+        public void KillAllEnemy(GameObject missile)
+        {
+            var sortedZombies = FindObjectsByType<Zombie>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            foreach (var zombie in sortedZombies)
+            {
+                Debug.Log(zombie.name);
+                var target = zombie.GetComponent<IDamageable>();
+                target?.OnDamage(9999999999, Vector3.zero, Vector3.zero);
+            }
+            
+            Destroy(missile);
         }
     }
 }

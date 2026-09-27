@@ -55,7 +55,9 @@ namespace Managers
         {
             _playerShooter.gun.ammoRemain += 30;
 
-            UIManager.Instance.ToggleShop(false);
+            var uiManager = UIManager.Instance;
+            uiManager.UpdateAmmoText(_playerShooter.gun.magAmmo, _playerShooter.gun.ammoRemain);
+            uiManager.ToggleShop(false);
         }
 
         private void OnHealthClick()

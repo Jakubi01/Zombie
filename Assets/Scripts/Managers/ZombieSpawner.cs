@@ -58,20 +58,21 @@ namespace Managers
             _isWaitingForNextWave = true;
             _currentRestTime = WaveDelay;
             
-            UIManager.Instance.ToggleStandByText(true);
-            UIManager.Instance.ToggleShop(true);
+            var uiManager = UIManager.Instance;
+            
+            uiManager.ToggleStandByText(true);
+            uiManager.ToggleShop(true);
 
             while (_currentRestTime > 0f)
             {
-                UIManager.Instance.UpdateStandByText(_currentRestTime);
+                uiManager.UpdateStandByText(_currentRestTime);
 
                 _currentRestTime -= Time.deltaTime;
-                Debug.Log(_currentRestTime);
                 yield return null;
             }
 
-            UIManager.Instance.ToggleStandByText(false);
-            UIManager.Instance.ToggleShop(false);
+            uiManager.ToggleStandByText(false);
+            uiManager.ToggleShop(false);
             
             _currentRestTime = 0f;
             SpawnWave();

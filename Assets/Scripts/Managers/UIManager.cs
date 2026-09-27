@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Data.SqlTypes;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,6 +27,7 @@ namespace Managers
         public Text scoreText; // 점수 표시용 텍스트
         public Text waveText; // 적 웨이브 표시용 텍스트
         public Text standByText; // 웨이브 쉬는 시간
+        public Text killStreakText;
         public ShopManager shopUI;
         public GameObject gameOverUI; // 게임 오버시 활성화할 UI
 
@@ -74,6 +77,20 @@ namespace Managers
         public void ToggleShop(bool active)
         {
             shopUI.gameObject.SetActive(active);
+        }
+
+        public void KillStreak()
+        {
+            StartCoroutine(nameof(KillStreakReady));
+        }
+        
+        private IEnumerator KillStreakReady()
+        {
+            killStreakText.gameObject.SetActive(true);
+
+            yield return new WaitForSeconds(2f);
+            
+            killStreakText.gameObject.SetActive(false);
         }
 
         // 게임 재시작 

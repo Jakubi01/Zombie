@@ -21,7 +21,7 @@ namespace Controller.PlayerController
 
         public void OnMove(InputAction.CallbackContext context)
         {
-            if (!enabled || GameManager.Instance.IsStandBy)
+            if (!enabled)
             {
                 Input = Vector2.zero;
                 return;
